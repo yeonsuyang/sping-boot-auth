@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity security) throws Exception{
         security
                 .csrf().disable()
-                .headers().frameOptions().disable()
+                .headers().frameOptions().disable() //h2 사용을 위한
                 .and()
                 .authorizeRequests().antMatchers("/oauth/**","/oauth2/callback").permitAll()
                 .and()
@@ -33,3 +33,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 }
+
+/*
+ @Override
+    protected void configure(final HttpSecurity http) throws Exception {
+        // @formatter:off
+        http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+                .and()
+                .cors()
+                .and()
+                .httpBasic().authenticationEntryPoint(authenticationEntryPoint)
+                .and()
+                .csrf().disable();
+
+        http.setSharedObject(SecurityContextRepository.class, securityContextRepository());
+        http.setSharedObject(RequestCache.class, sessionRequestCache());
+        // @formatter:on
+    }
+ */
