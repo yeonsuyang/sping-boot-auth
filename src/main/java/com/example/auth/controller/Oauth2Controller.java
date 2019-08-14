@@ -1,5 +1,7 @@
 package com.example.auth.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.example.auth.model.OAuthToken;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -19,25 +21,34 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/oauth2")
 public class Oauth2Controller {
 
-    private final Gson gson = new Gson();
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final Gson gson;
+    private final RestTemplate restTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(OAuthToken.class);
 
     @GetMapping(value = "/callback")
     public OAuthToken callbackSocial(@RequestParam String code) {
 
-        String credentials = "testClientId:test_auth";
+        String credentials = "testClientId:testSecret";
         String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.add("Authorization", "Basic " + encodedCredentials);
 
+        logger.info("33333" + headers);
+
+
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("grant_type", "authorization_code");
-        params.add("redirect_uri", "http://localhost:8081/oauth2/callback");
+        params.add("redirect_uri", "http://localhost:8080/oauth2/callback");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8081/oauth/token", request, String.class);
+        logger.info("44444" + request);
+
+       ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8081/oauth/token?", request, String.class);
+    //postForEntity(String url, @Nullable Object request,
+        //			Class<T> responseType, Object... uriVariables)
+
         if (response.getStatusCode() == HttpStatus.OK) {
             return gson.fromJson(response.getBody(), OAuthToken.class);
         }

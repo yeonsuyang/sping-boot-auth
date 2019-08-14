@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -14,10 +14,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+
+        BCryptPasswordEncoder encoder = passwordEncoder();
+
         auth.inMemoryAuthentication()
-                .withUser("admin")
-                .password("{noop}1234")
-                .roles("USER");
+                .withUser("ys")
+                .password((encoder.encode("ys")))
+               // .password("{noop}1234")
+                .roles("ADMIN");
     }
 
     @Override
@@ -26,12 +30,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .headers().frameOptions().disable() //h2 사용을 위한
                 .and()
-                .authorizeRequests().antMatchers("/oauth/**","/oauth2/callback").permitAll()
+                .authorizeRequests().antMatchers("/oauth/**", "oauth/token", "/oauth2/**", "/h2-console/*").permitAll()
                 .and()
                 .formLogin()
                 .and()
                 .httpBasic();
     }
+
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }
 
 /*
