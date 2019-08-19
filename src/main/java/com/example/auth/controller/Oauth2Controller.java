@@ -28,30 +28,24 @@ public class Oauth2Controller {
     @GetMapping(value = "/callback")
     public OAuthToken callbackSocial(@RequestParam String code) {
 
-        String credentials = "testClientId:testSecret";
+        String credentials = "test_auth:secretId";
         String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.add("Authorization", "Basic " + encodedCredentials);
 
-        logger.info("33333" + headers);
-
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("grant_type", "authorization_code");
         params.add("redirect_uri", "http://localhost:8080/oauth2/callback");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        logger.info("44444" + request);
-
-       ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8081/oauth/token?", request, String.class);
-    //postForEntity(String url, @Nullable Object request,
-        //			Class<T> responseType, Object... uriVariables)
-
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             return gson.fromJson(response.getBody(), OAuthToken.class);
         }
         return null;
     }
 }
+
+

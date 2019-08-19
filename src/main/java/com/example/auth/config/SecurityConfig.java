@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
@@ -15,12 +17,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
 
-        BCryptPasswordEncoder encoder = passwordEncoder();
+        PasswordEncoder encoder = passwordEncoder();
+
 
         auth.inMemoryAuthentication()
-                .withUser("ys")
+               .withUser("ys")
                 .password((encoder.encode("ys")))
-               // .password("{noop}1234")
+                // .password("{noop}1234")
                 .roles("ADMIN");
     }
 
@@ -38,9 +41,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
+    // 이게 기본이라는데 안됨
+    /*
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }*/
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
 }

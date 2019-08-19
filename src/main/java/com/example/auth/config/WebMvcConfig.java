@@ -25,5 +25,4 @@ public class WebMvcConfig implements WebMvcConfigurer { //공통 빈이나 필�
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
-
 }

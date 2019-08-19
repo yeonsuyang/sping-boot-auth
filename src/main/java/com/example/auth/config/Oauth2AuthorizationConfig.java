@@ -11,14 +11,15 @@ package com.example.auth.config;
 public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
-        clients.inMemory().withClient("testClientId")
-                .secret("testSecret")
-                .redirectUris("http://localhost:8081/oauth2/callback") //"http://localhost:4200**
-                .authorizedGrantTypes("authorization_code") // implicit
-                .scopes("read","write") //토큰으로 접근할 수 있는 리소스 범위
+
+        clients.inMemory()
+                .withClient("test_auth")
+                .secret("{noop}secretId")
+                .redirectUris("http://localhost:8080/oauth2/callback") //"http://localhost:4200**
+                .authorizedGrantTypes("authorization_code")// implicit
+                .scopes("read", "write") //토큰으로 접근할 수 있는 리소스 범위
                 .accessTokenValiditySeconds(30000); // 발급 후 유효시간
     }
-
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {

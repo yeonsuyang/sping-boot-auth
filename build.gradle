@@ -24,8 +24,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.1.2.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security:spring-security-jwt'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.cloud:spring-cloud-starter-security:2.1.2.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.1.2.RELEASE'
+   // implementation 'org.springframework.security:spring-security-jwt'
+   // implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // database
     runtimeOnly 'com.h2database:h2'
@@ -40,3 +42,5 @@ dependencies {
     // utils
     implementation 'com.google.code.gson:gson'
 }
+
+
