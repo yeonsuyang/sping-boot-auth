@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+/*
+http://localhost:8080/oauth/authorize?client_id=test_auth&redirect_uri=http://localhost:8080/oauth2/callback&response_type=code&scope=read
+ */
 
 @RequiredArgsConstructor
 @RestController
@@ -36,6 +39,7 @@ public class Oauth2Controller {
         headers.add("Authorization", "Basic " + encodedCredentials);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", code);
         params.add("code", code);
         params.add("grant_type", "authorization_code");
         params.add("redirect_uri", "http://localhost:8080/oauth2/callback");

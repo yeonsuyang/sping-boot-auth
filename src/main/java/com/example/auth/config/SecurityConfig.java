@@ -1,30 +1,46 @@
 package com.example.auth.config;
 
-import org.springframework.context.annotation.Bean;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+
+/*
+
+The dependencies of some of the beans in the application context form a cycle:
+
+┌─────┐
+|  customAuthorizationProvider defined in file [/home/ysyang/IdeaProjects/springboot-auth/out/production/classes/com/example/auth/config/CustomAuthorizationProvider.class]
+↑     ↓
+|  securityConfig defined in file [/home/ysyang/IdeaProjects/springboot-auth/out/production/classes/com/example/auth/config/SecurityConfig.class]
+└─────┘
+
+이 문제에 대한 해결 법
+> PasswordEncoder @Bean을 securityConfig 안에 선언해놨었는데 그러니 빈의 순환 참조 발생 WebMvcConfig로 옮겼음.
+
+ */
 
 @Configuration
-@EnableWebSecurity
+@RequiredArgsConstructor
+// @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final CustomAuthorizationProvider authorizationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+        auth.authenticationProvider(authorizationProvider);
 
+        // inMemory일 때
+        /*
         PasswordEncoder encoder = passwordEncoder();
-
-
         auth.inMemoryAuthentication()
-               .withUser("ys")
-                .password((encoder.encode("ys")))
+                  .withUser("ys")
+                  .password((encoder.encode("ys")))
                 // .password("{noop}1234")
-                .roles("ADMIN");
+                  .roles("ADMIN"); */
     }
 
     @Override
@@ -47,11 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }*/
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 
 }
 
