@@ -2,6 +2,7 @@ package com.example.auth.config;
 
 import com.example.auth.service.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -57,8 +58,12 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
         endpoints.accessTokenConverter(jwtAccessTokenConverter()).userDetailsService(userDetailService);
     }
 
+    private String signKey = "123@#$";
+
     @Bean //jwt converter
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        return new JwtAccessTokenConverter();
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey(signKey);
+        return converter;
     }
 }
