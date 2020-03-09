@@ -27,7 +27,7 @@ The dependencies of some of the beans in the application context form a cycle:
 // @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomAuthorizationProvider authorizationProvider;
+    private CustomAuthorizationProvider authorizationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                   .roles("ADMIN"); */
     }
 
+    /*
     @Override
     protected void configure(HttpSecurity security) throws Exception{
         security
@@ -54,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .and()
                 .httpBasic();
-    }
+    }*/
 
 
     // 이게 기본이라는데 안됨

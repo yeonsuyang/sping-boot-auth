@@ -3,26 +3,39 @@ package com.example.auth.config;
 import com.example.auth.service.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableAuthorizationServer //인증 서버 설정 // 토큰 발행, 발행된 토큰 검증
 public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
-    private final PasswordEncoder passwordEncoder;
-    private final DataSource dataSource;
-    private final CustomUserDetailService userDetailService;
+    PasswordEncoder passwordEncoder;
+    DataSource dataSource;
+    CustomUserDetailService userDetailService;
+    TokenStore jwtTokenStore;
 
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
 
@@ -66,4 +79,5 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
         converter.setSigningKey(signKey);
         return converter;
     }
+
 }

@@ -5,6 +5,7 @@ package com.example.auth.config;
 import com.example.auth.entity.User;
 import com.example.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,8 +19,9 @@ import org.springframework.stereotype.Component;
 public class CustomAuthorizationProvider implements AuthenticationProvider {
     //왜 이름이 OauthAuthrizationProvider로 안되지..ㅎ_ㅎ
 
-    private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
+
+    UserRepository userRepository;
 
     @Override
     public Authentication authenticate(Authentication authentication) {
